@@ -1,0 +1,30 @@
+version 00.01	10 minutes dev	2 minutes code gen	3 minutes test		15 minutes total
+
+The starting basis for this Minotaur game is Maze Game. I don't mean theoretically - I mean that
+will be the source. For this version, we will start with the existing base app, then make some
+minor changes to trivially match the new app.
+I presented the app description of Maze Game first. It provided feedback on what
+it thought it saw. It did decent analysis the text description. Not super useful: the game 
+itself has more details that are not documented. It understood well, and didn't suggested
+changes, which is good, since it would have been inaccurate.
+I presented the app itself. This is did seem to understand well. It made some assumption on how
+the game would be completed. That was largely wrong - not horrible, but not really an issue.
+I will tell it what we'll implement.
+The first step will be to remove the UI for changing the map size. Having UI for that is not 
+part of this game. We will change the size, but it will be part of the game: map gets larger
+as the player advances. That was a fairly substantial change: many variables and functions
+were no longer valid. There was one defect (of a function call left behind) but easily fixed.
+The next step is to remove the Reset Maze button. I suppose that could have been retained.
+But I want it to look different. For this one, the logic behind the button exists, but only
+shows after the maze is exited. The button will be shown. If pressed, the game it restart
+(new map, player starts at top-left) and the button goes away again.
+That's it for now. Minotaur functionals will start next.
+
+
+Design "Does the Minotaur move randomly?" No, it will go to the player as quick as it can.
+Design "Can the player see the Minotaur in 3D?" Yes, though not to start
+Design "Is it visible only if in line-of-sight?" Yes, for 3D. 2D, always visible
+Design "Is there sound?" Yes, the Minotaur will talk
+Design "Is there stamina?" No. Not a bad idea, but I don't see value.
+Design "Is the goal still escape" Yes
+Design "Does maze regenerate per death?" Yes
