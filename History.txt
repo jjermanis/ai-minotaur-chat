@@ -21,6 +21,20 @@ shows after the maze is exited. The button will be shown. If pressed, the game i
 That's it for now. Minotaur functionals will start next.
 
 
+version 00.02	14 minutes dev	0 minutes code gen	5 minutes test		34 minutes total
+
+One change is to introduce automatic level climbing. The list of levels goes from 3 to 5.
+Minotaur starts on the first level. When the player gets to the escape, when you reset, it goes 
+one level forward. When you exit on the last cave level, it says "You Win!" Chat was asked to do
+this. There were a substantial number of changes, but all were simple. Chat was a bit odd: in
+their reply, some was valid source code, and some was pseudo. Easy enough to follow.
+The other change was to add a MINOTAUR game title to the top of the screen. This was simple:
+the text, the format, and a list of fonts to use (depending on the user has available). Quick
+and easy.
+
+
+
+Chat: "Display level number. Top center above maze, or inside status"
 Design "Does the Minotaur move randomly?" No, it will go to the player as quick as it can.
 Design "Can the player see the Minotaur in 3D?" Yes, though not to start
 Design "Is it visible only if in line-of-sight?" Yes, for 3D. 2D, always visible
@@ -28,3 +42,5 @@ Design "Is there sound?" Yes, the Minotaur will talk
 Design "Is there stamina?" No. Not a bad idea, but I don't see value.
 Design "Is the goal still escape" Yes
 Design "Does maze regenerate per death?" Yes
+
+

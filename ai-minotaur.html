@@ -13,6 +13,7 @@ body {
     align-items: center;
     height: 100vh;
 }
+
 #container {
     display: flex;
     gap: 16px;
@@ -43,16 +44,13 @@ canvas {
 }
 
 #topRow {
-    width: 816px;              /* same as statusRow */
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    height: 32px;
-    position: relative;
-}
-
-#topRow .spacer {
-    width: 400px;              /* aligns dropdown above 2D */
+    color: #c9c3b5;
+    font-family: "Cinzel", serif;
+    font-size: 42px;
+    letter-spacing: 6px;
+    text-align: center;
+    margin-bottom: 4px;
+    text-shadow: 2px 2px 6px black;
 }
 
 
@@ -61,7 +59,7 @@ canvas {
 <body>
 
 <div id="topRow">
-    <div class="spacer"></div>
+    <div id="title">MINOTAUR</div>
 </div>
 <div id="container">
     <canvas id="view3d" width="400" height="400"></canvas>
@@ -79,11 +77,11 @@ const FOV = Math.PI / 3;
 const RAYS = 200;
 const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
 const MAX_LIGHT_DIST = 12;
-const SIZE_OPTIONS = [10, 16, 20];
-const CELL_OPTIONS = [40, 25, 20];
-let sizeIndex = 0;
-SIZE = SIZE_OPTIONS[sizeIndex];
-CELL = CELL_OPTIONS[sizeIndex];
+const SIZE_OPTIONS = [8, 10, 16, 20, 25];
+const CELL_OPTIONS = [50, 40, 25, 20, 16];
+let levelIndex = 0;
+SIZE = SIZE_OPTIONS[levelIndex];
+CELL = CELL_OPTIONS[levelIndex];
 
 // Core state (allocated once)
 const maze = [];
@@ -155,6 +153,20 @@ function initGame() {
     statusEl.textContent = "";
     resetBtn.disabled = true;
     resetBtn.style.display = "none";
+}
+
+function advanceLevel() {
+    if (levelIndex < SIZE_OPTIONS.length - 1) {
+        levelIndex++;
+    } else {
+        levelIndex = 0;
+    }
+
+    sizeIndex = levelIndex;
+    SIZE = SIZE_OPTIONS[sizeIndex];
+    CELL = CELL_OPTIONS[sizeIndex];
+
+    initGame();
 }
 
 /* ============================
@@ -281,7 +293,11 @@ document.addEventListener("keydown", e => {
             player.x+=dx; player.y+=dy;
             if (player.x===SIZE-1 && player.y===SIZE-1) {
                 player.escaped=true;
-                statusEl.textContent="You Escaped!";
+                if (levelIndex < SIZE_OPTIONS.length - 1) {
+                    statusEl.textContent = "You Escaped!"; 
+                } else {
+                    statusEl.textContent = "You Win!"
+                }
                 resetBtn.disabled=false;
     		resetBtn.style.display = "block";
             }
@@ -289,7 +305,7 @@ document.addEventListener("keydown", e => {
     }
 });
 
-resetBtn.addEventListener("click", initGame);
+resetBtn.addEventListener("click", advanceLevel);
 
 function loop() {
     draw3D();

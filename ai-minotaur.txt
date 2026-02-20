@@ -1,18 +1,19 @@
 Create a single-page app in a single HTML file with the following requirements:
-- Name: Maze
+- Name: Minotaur
 - Goal: Get your character through the maze.
-- The maze is placed in a 20x20 cell grid. 
+- The maze is placed in a square cell grid. There are 50 dimensions: 8x8, 10x10, 16x16, 20x20, 25x25. 
+- These grid levels are played in order, starting with 8x8.
 - The entrance is at the upper-left corner of the grid.
 - The exit is at the lower-right corner of the grid.
 - To create the maze on each game, it uses the Depth First Search. The elements that block paths in the maze are referred to as walls.
 - Every square in the maze should be reachable, due to completion of Depth First Search.
+- At the top of screen and centered is the game title: "MINOTAUR".
 - For the layout of the screen, there are two maps in the middle of the screen.
 - There are two maps shown on the screen. They are different views of the same map.
 - The map on the right is a 2D view of the map. The view looks like a typical 2D map. The ground is green like grass. The walls are red like bricks.
 - The map on the left is a 3D view of the map. The ground is green grass. The walls are red bricks. The skies are blue.
-- There is a button above the upper-right corner of the 2D view. It is labeled "Change Map Size...". It opens a modal dialog.
 - The modal dialog allows the size of the cell grid to be changed.
-- There is a button below the lower-right corner of the 2D view. It is labeled "Reset Maze". At the beginning of each game the button is disabled.
+- There is a button below the lower-right corner of the 2D view. It is labeled "Reset Maze". It is displayed the player exits the current map.
 - Controls are based on the 2D view on the right.
 - The player of the game is a gray arrow. The tip of the arrow points forward.
 - At the beginning, players will not see the entire maze on the 2D grid. At the beginning, all the squares show as gray.
@@ -26,8 +27,9 @@ Create a single-page app in a single HTML file with the following requirements:
 - On the 3D view of the map, the walls are brightest closest to the arrow. The farther away the wall is from the arrow, the dimmer the wall is shown.
 - The external walls (bottom and right) on the exit grid are colored green.
 - When the arrow comes to the exit grid, the center below the views says: You Escape! The arrow is no longer seen.
-- When the arrow comes to the exit grid, the Reset Maze button is enabled.
-- Clicking the Reset Maze button starts a new game. A new maze is generated, the arrow moves the upper-left corner, the Reset Maze button is disabled.
+- When the arrow comes to the exit grid, the Reset Maze button is visible.
+- Clicking the Reset Maze button starts the next level. A new maze is generated, the arrow moves the upper-left corner, the Reset Maze button is hidden.
+- If the player just passed the final level, the center below the views says "You win!" Clicking the button starts a new game.
 
 
 
