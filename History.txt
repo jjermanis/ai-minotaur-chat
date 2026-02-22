@@ -1,4 +1,4 @@
-version 00.01	10 minutes dev	2 minutes code gen	3 minutes test		15 minutes total
+Version 00.01	10 minutes dev	2 minutes code gen	3 minutes test		15 minutes total
 
 The starting basis for this Minotaur game is Maze Game. I don't mean theoretically - I mean that
 will be the source. For this version, we will start with the existing base app, then make some
@@ -21,7 +21,7 @@ shows after the maze is exited. The button will be shown. If pressed, the game i
 That's it for now. Minotaur functionals will start next.
 
 
-version 00.02	14 minutes dev	0 minutes code gen	5 minutes test		34 minutes total
+Version 00.02	14 minutes dev	0 minutes code gen	5 minutes test		34 minutes total
 
 One change is to introduce automatic level climbing. The list of levels goes from 3 to 5.
 Minotaur starts on the first level. When the player gets to the escape, when you reset, it goes 
@@ -33,8 +33,39 @@ the text, the format, and a list of fonts to use (depending on the user has avai
 and easy.
 
 
+Version 00.03	15 minutes dev	 1 minutes code gen	3 minutes test		53 minutes total
 
+A long standing issue that needed adjustment: even as the scale of the maze changes, the player
+size does not change at all. This is minor, but does not look quite right - the arrow should
+change in scale in proportion to the maze cells. I asked Chat for the change. It did it quick and
+easy, no issues.
+The first truly new feature: adding the Minotaur to the screen. The first step: present the 
+Minotaur in the 2D map. No action, no motion - just testing a model for the UI. I described a
+model for the Minotaur. The first implementation has small horns. Asked for a smaller head and
+longer spiky horns. The second implementation looks like a cartoon mouse. I provided more tweaks.
+The third implementation REALLY looked like a cute cartoon masks. I started with a new description:
+horns start straight to the side and point up. That was a lot better. Too big though: it would 
+extended through walls. This made it easy to tweak: I edited the variables to make it fit well.
+Not ideal... but a good starting point.
+Next, we start with the implementation within the game. Initially, all the UI changes in 2D.
+Adding to 3D is after that.
+
+
+
+TODO: Get Minotaur to appear and start according to rules. The timer starts for each level based 
+	on when players leave first square. The Minotaur starts based on size of Maze. Let's
+	say the maze is 10x10. The Minotaur appears in the upper-left in 5 seconds. It will
+	start moving after 10 seconds.
+TODO: The Minotaur will persue player. It will always move to the player on the alternate
+	path. A bredth first search will work.
+TODO: The speed will be passed on the level. The higher the level, the faster the speed.
+TODO: If the player and Minotaur touch, it is game over.
+TODO: Add speech for Minotaur. When it appears, it says "awake". When it starts moving, it
+	says "go". When it can first see the player, it says "food". If it catches the player
+	it says "eat...eat"
 Chat: "Display level number. Top center above maze, or inside status"
+Chat: "For 2D Minotaur, Add small black eye slits"
+Chat: "For 2D Minotaur, Slightly flatten bottom of skull"
 Design "Does the Minotaur move randomly?" No, it will go to the player as quick as it can.
 Design "Can the player see the Minotaur in 3D?" Yes, though not to start
 Design "Is it visible only if in line-of-sight?" Yes, for 3D. 2D, always visible

@@ -94,6 +94,10 @@ const player = {
     dir: 1,
     escaped: false
 };
+const minotaur = {
+    x: 0,
+    y: 0,
+};
 
 // Contexts
 const ctx3 = view3d.getContext("2d");
@@ -267,17 +271,107 @@ function draw2D() {
 
     if (!player.escaped) {
         ctx2.save();
-        ctx2.translate(player.x*CELL+CELL/2, player.y*CELL+CELL/2);
-        ctx2.rotate(player.dir*Math.PI/2 - Math.PI/2);
+        ctx2.translate(player.x*CELL + CELL/2, player.y*CELL + CELL/2);
+        ctx2.rotate(player.dir * Math.PI/2 - Math.PI/2);
         ctx2.fillStyle = "#aaa";
+
+        const tip = CELL * 0.4;
+        const wing = CELL * 0.3;
+
         ctx2.beginPath();
-        ctx2.moveTo(8,0);
-        ctx2.lineTo(-6,6);
-        ctx2.lineTo(-6,-6);
+        ctx2.moveTo(tip, 0);
+        ctx2.lineTo(-wing, wing);
+        ctx2.lineTo(-wing, -wing);
         ctx2.fill();
+
         ctx2.restore();
     }
+    drawMinotaur2D();
 }
+
+function drawMinotaur2D() {
+    const cx = minotaur.x * CELL + CELL / 2;
+    const cy = minotaur.y * CELL + CELL / 2;
+
+
+    //const headRadius = CELL * 0.28;   // similar to original strong head
+    //const hornLength = CELL * 0.45;   // horizontal part
+    //const hornThickness = CELL * 0.10;
+    //const hornTipHeight = CELL * 0.35;
+
+    const headRadius = CELL * 0.22;   // similar to original strong head
+    const hornLength = CELL * 0.18;   // horizontal part
+    const hornThickness = CELL * 0.10;
+    const hornTipHeight = CELL * 0.30;
+
+
+    const snoutWidth = CELL * 0.32;
+    const snoutHeight = CELL * 0.20;
+
+    ctx2.save();
+    ctx2.translate(cx, cy);
+    ctx2.fillStyle = "#888";
+
+    /*
+        LEFT HORN - RECTANGLE
+    */
+    ctx2.fillRect(
+        -headRadius - hornLength,
+        -hornThickness / 2,
+        hornLength,
+        hornThickness
+    );
+
+    /*
+        LEFT HORN - TRIANGLE (pointing up)
+    */
+    ctx2.beginPath();
+    ctx2.moveTo(-headRadius - hornLength, -hornThickness / 2);
+    ctx2.lineTo(-headRadius - hornLength, -hornTipHeight);
+    ctx2.lineTo(-headRadius - hornLength + hornThickness, -hornThickness / 2);
+    ctx2.closePath();
+    ctx2.fill();
+
+    /*
+        RIGHT HORN - RECTANGLE
+    */
+    ctx2.fillRect(
+        headRadius,
+        -hornThickness / 2,
+        hornLength,
+        hornThickness
+    );
+
+    /*
+        RIGHT HORN - TRIANGLE (pointing up)
+    */
+    ctx2.beginPath();
+    ctx2.moveTo(headRadius + hornLength, -hornThickness / 2);
+    ctx2.lineTo(headRadius + hornLength, -hornTipHeight);
+    ctx2.lineTo(headRadius + hornLength - hornThickness, -hornThickness / 2);
+    ctx2.closePath();
+    ctx2.fill();
+
+    /*
+        HEAD (stronger presence)
+    */
+    ctx2.beginPath();
+    ctx2.arc(0, 0, headRadius, 0, Math.PI * 2);
+    ctx2.fill();
+
+    /*
+        SNOUT
+    */
+    ctx2.fillRect(
+        -snoutWidth / 2,
+        headRadius * 0.3,
+        snoutWidth,
+        snoutHeight
+    );
+
+    ctx2.restore();
+}
+
 
 /* ============================
    INPUT / LOOP
