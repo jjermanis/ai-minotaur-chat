@@ -51,13 +51,22 @@ Next, we start with the implementation within the game. Initially, all the UI ch
 Adding to 3D is after that.
 
 
+Version 00.04	12 minutes dev	1 minutes code gen	2 minutes test		1 hour 8
 
-TODO: Get Minotaur to appear and start according to rules. The timer starts for each level based 
-	on when players leave first square. The Minotaur starts based on size of Maze. Let's
-	say the maze is 10x10. The Minotaur appears in the upper-left in 5 seconds. It will
-	start moving after 10 seconds.
-TODO: The Minotaur will persue player. It will always move to the player on the alternate
-	path. A bredth first search will work.
+To lead off, we start to implement the Minotaur behavior as intended. There is a timer based
+on the size of the grid. The timer starts when the players moves off their first square in 
+the grid. 
+Let's say the maze is 10x10. After half the size in seconds (in this case, 5 seconds), the 
+Minotaur appears in the  upper-left corner, the same as the start of the plater. When the time 
+matches the size (10 seconds)... well, it will eventually chase the player, but for now, the
+Minotaur moves to (1,1). All of this UI is in the 2D grid. 
+Chat provided the code for this. It worked... but did not reset the Minotaur location at the 
+end of a level. That was easy to spot and to fix. Now it behaves as expected for each level.
+
+
+
+TODO: The Minotaur will pursue player. It will always move to the player on the alternate
+	path. A breadth first search will work.
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
 TODO: If the player and Minotaur touch, it is game over.
 TODO: Add speech for Minotaur. When it appears, it says "awake". When it starts moving, it

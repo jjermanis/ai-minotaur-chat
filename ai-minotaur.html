@@ -79,7 +79,14 @@ const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
 const MAX_LIGHT_DIST = 12;
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
 const CELL_OPTIONS = [50, 40, 25, 20, 16];
+
 let levelIndex = 0;
+
+let minotaurVisible = false;
+let minotaurHasMoved = false;
+let minotaurTimerStarted = false;
+let minotaurStartTime = 0;
+
 SIZE = SIZE_OPTIONS[levelIndex];
 CELL = CELL_OPTIONS[levelIndex];
 
@@ -153,6 +160,16 @@ function initGame() {
     player.dir = 1;
     player.escaped = false;
 
+    // --- Reset Minotaur State ---
+    minotaurVisible = false;
+    minotaurHasMoved = false;
+    minotaurTimerStarted = false;
+    minotaurStartTime = 0;
+
+    // Reset position (invisible until triggered)
+    minotaur.x = 0;
+    minotaur.y = 0;
+
     // UI reset
     statusEl.textContent = "";
     resetBtn.disabled = true;
@@ -171,6 +188,27 @@ function advanceLevel() {
     CELL = CELL_OPTIONS[sizeIndex];
 
     initGame();
+}
+
+function updateMinotaurTimer() {
+    if (!minotaurTimerStarted) return;
+
+    const gridSize = SIZE; // assuming square grid
+    const elapsedSeconds = (performance.now() - minotaurStartTime) / 1000;
+
+    // Appear at (0,0) after N/2 seconds
+    if (!minotaurVisible && elapsedSeconds >= gridSize / 2) {
+        minotaurVisible = true;
+        minotaur.x = 0;
+        minotaur.y = 0;
+    }
+
+    // Move to (1,1) after N seconds
+    if (!minotaurHasMoved && elapsedSeconds >= gridSize) {
+        minotaurHasMoved = true;
+        minotaur.x = 1;
+        minotaur.y = 1;
+    }
 }
 
 /* ============================
@@ -286,18 +324,14 @@ function draw2D() {
 
         ctx2.restore();
     }
-    drawMinotaur2D();
+    if (minotaurVisible) {
+        drawMinotaur2D();
+    }
 }
 
 function drawMinotaur2D() {
     const cx = minotaur.x * CELL + CELL / 2;
     const cy = minotaur.y * CELL + CELL / 2;
-
-
-    //const headRadius = CELL * 0.28;   // similar to original strong head
-    //const hornLength = CELL * 0.45;   // horizontal part
-    //const hornThickness = CELL * 0.10;
-    //const hornTipHeight = CELL * 0.35;
 
     const headRadius = CELL * 0.22;   // similar to original strong head
     const hornLength = CELL * 0.18;   // horizontal part
@@ -384,7 +418,14 @@ document.addEventListener("keydown", e => {
         const dx=[0,1,0,-1][player.dir];
         const dy=[-1,0,1,0][player.dir];
         if (!maze[player.y][player.x].walls[player.dir]) {
-            player.x+=dx; player.y+=dy;
+            player.x+=dx; 
+            player.y+=dy;
+
+            if (!minotaurTimerStarted && (player.x !== 0 || player.y !== 0)) {
+                minotaurTimerStarted = true;
+                minotaurStartTime = performance.now();
+            }
+
             if (player.x===SIZE-1 && player.y===SIZE-1) {
                 player.escaped=true;
                 if (levelIndex < SIZE_OPTIONS.length - 1) {
@@ -402,6 +443,7 @@ document.addEventListener("keydown", e => {
 resetBtn.addEventListener("click", advanceLevel);
 
 function loop() {
+    updateMinotaurTimer();
     draw3D();
     draw2D();
     requestAnimationFrame(loop);
