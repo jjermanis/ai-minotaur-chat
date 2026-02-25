@@ -86,6 +86,9 @@ let minotaurVisible = false;
 let minotaurHasMoved = false;
 let minotaurTimerStarted = false;
 let minotaurStartTime = 0;
+let minotaurPath = [];
+let minotaurLastMoveTime = 0;
+const MINOTAUR_MOVE_DELAY = 500; // ms
 
 SIZE = SIZE_OPTIONS[levelIndex];
 CELL = CELL_OPTIONS[levelIndex];
@@ -203,11 +206,102 @@ function updateMinotaurTimer() {
         minotaur.y = 0;
     }
 
-    // Move to (1,1) after N seconds
+    // Activate after N seconds
     if (!minotaurHasMoved && elapsedSeconds >= gridSize) {
         minotaurHasMoved = true;
-        minotaur.x = 1;
-        minotaur.y = 1;
+    }
+}
+
+function computeMinotaurPath() {
+
+    const visited = Array.from({ length: SIZE }, () =>
+        Array(SIZE).fill(false)
+    );
+
+    const parent = Array.from({ length: SIZE }, () =>
+        Array(SIZE).fill(null)
+    );
+
+    const queue = [];
+
+    queue.push({ x: minotaur.x, y: minotaur.y });
+    visited[minotaur.y][minotaur.x] = true;
+
+    // MUST match DFS wall ordering
+    const directions = [
+        { dx: 0, dy: -1, wallIndex: 0 }, // top
+        { dx: 1, dy: 0,  wallIndex: 1 }, // right
+        { dx: 0, dy: 1,  wallIndex: 2 }, // bottom
+        { dx: -1, dy: 0, wallIndex: 3 }  // left
+    ];
+
+    let found = false;
+
+    while (queue.length > 0) {
+        const current = queue.shift();
+
+        if (current.x === player.x && current.y === player.y) {
+            found = true;
+            break;
+        }
+
+        for (const dir of directions) {
+
+            const nx = current.x + dir.dx;
+            const ny = current.y + dir.dy;
+
+            if (
+                nx >= 0 && nx < SIZE &&
+                ny >= 0 && ny < SIZE &&
+                !visited[ny][nx] &&
+                maze[current.y][current.x].walls[dir.wallIndex] === 0
+            ) {
+                visited[ny][nx] = true;
+                parent[ny][nx] = current;
+                queue.push({ x: nx, y: ny });
+            }
+        }
+    }
+
+    if (!found) return [];
+
+    const path = [];
+    let step = { x: player.x, y: player.y };
+
+    while (!(step.x === minotaur.x && step.y === minotaur.y)) {
+        path.push(step);
+        step = parent[step.y][step.x];
+    }
+
+    path.reverse();
+    return path;
+}
+
+function updateMinotaurMovement() {
+
+    if (!minotaurVisible) return;
+
+    const now = performance.now();
+
+    if (now - minotaurLastMoveTime < MINOTAUR_MOVE_DELAY) return;
+
+    minotaurLastMoveTime = now;
+
+    // If no path or player moved, recompute
+    if (
+        minotaurPath.length === 0 ||
+        minotaurPath[minotaurPath.length - 1].x !== player.x ||
+        minotaurPath[minotaurPath.length - 1].y !== player.y
+    ) {
+        minotaurPath = computeMinotaurPath();
+    }
+
+    if (minotaurPath.length > 0) {
+        const nextStep = minotaurPath.shift();
+        minotaur.x = nextStep.x;
+        minotaur.y = nextStep.y;
+minotaurHasMoved = true;
+	console.log(nextStep.x);
     }
 }
 
@@ -444,6 +538,7 @@ resetBtn.addEventListener("click", advanceLevel);
 
 function loop() {
     updateMinotaurTimer();
+    updateMinotaurMovement();
     draw3D();
     draw2D();
     requestAnimationFrame(loop);

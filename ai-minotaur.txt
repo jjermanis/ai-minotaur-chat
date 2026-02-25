@@ -24,6 +24,9 @@ Create a single-page app in a single HTML file with the following requirements:
 - If the player types the left arrow, the arrow turns 90 degrees to the left.
 - If the player types the right arrow, the arrow turns 90 degrees to the right.
 - If the player types the up arrow, if there is not a wall in the way, it moves one square in the direction it points.
+- The Minotaur will start moving (cells width on maze) seconds after the player has first moved from that corner.
+- For each step, the minotaur will take the next steps on the closest path to the play - each step is optimal.
+- For each step, the minotaur will follow the same rules as the player. For example, The Minotaur cannot do through walls.
 - The map on the left is a 3D view of the map. The ground is green grass. The walls are red bricks. The skies are blue.
 - On the 3D view of the map, the point of view is from the gray arrow. You cannot see the arrow in the picture - it is the arrow's point of view.
 - On the 3D view of the map, the point of view from the gray arrow is 5 feet tall. The red brick walls are 10 feet tall.
