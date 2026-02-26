@@ -116,6 +116,30 @@ const ctx2 = view2d.getContext("2d");
 const statusEl = document.getElementById("status");
 const resetBtn = document.getElementById("resetBtn");
 
+
+let selectedVoice = null;
+
+function selectMinotaurVoice() {
+    const voices = speechSynthesis.getVoices();
+
+    const preferredVoiceNames = [
+        "Google UK English Female",
+        "Google español de Estados Unidos",
+        "Google français",
+    ];
+
+    for (const preferred of preferredVoiceNames) {
+        const found = voices.find(v => v.name === preferred);
+        if (found) {
+            selectedVoice = found;
+            return;
+        }
+    }
+
+    // Fallback if none found
+    selectedVoice = voices[0] || null;
+}
+
 // DFS maze generation
 function dfs(x, y) {
     maze[y][x].visited = true;
@@ -134,6 +158,7 @@ function dfs(x, y) {
    INIT / RESET GAME
    ============================ */
 function initGame() {
+    selectMinotaurVoice();
     // Build maze + wall colors
     for (let y = 0; y < SIZE; y++) {
         maze[y] = [];
@@ -198,12 +223,14 @@ function advanceLevel() {
 function updateMinotaurTimer() {
     if (!minotaurTimerStarted) return;
     if (player.escaped) return;
+    if (player.defeated) return;
 
     const gridSize = SIZE; // assuming square grid
     const elapsedSeconds = (performance.now() - minotaurStartTime) / 1000;
 
     // Appear at (0,0) first...
     if (!minotaurVisible && elapsedSeconds >= gridSize * 0.3) {
+        minotaurSpeak("awake");
         minotaurVisible = true;
         minotaur.x = 0;
         minotaur.y = 0;
@@ -211,6 +238,7 @@ function updateMinotaurTimer() {
 
     // ... and later become active
     if (!minotaurActive && elapsedSeconds >= gridSize * 0.7) {
+        minotaurSpeak("go");
         minotaurActive = true;
     }
 }
@@ -315,9 +343,22 @@ function checkMinotaurCollision() {
         player.y === minotaur.y
     ) {
         minotaurActive = false;
+	minotaurSpeak("eat.. eat");
         showDefeatMessage();
         draw2D();
     }
+}
+
+function minotaurSpeak(text) {
+    if (!selectedVoice) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = selectedVoice;
+    utterance.pitch = 0.3;   // slightly deeper
+    utterance.rate = 0.6;    // slightly slower
+    utterance.volume = 1.0;
+
+    speechSynthesis.speak(utterance);
 }
 
 /* ============================
@@ -560,6 +601,10 @@ document.addEventListener("keydown", e => {
 });
 
 resetBtn.addEventListener("click", advanceLevel);
+
+speechSynthesis.onvoiceschanged = function() {
+    selectMinotaurVoice();
+};
 
 function loop() {
     updateMinotaurTimer();

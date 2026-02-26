@@ -17,6 +17,7 @@ Create a single-page app in a single HTML file with the following requirements:
 - The Minotaur appears in the upper-left hand of the map. 
 - The Minotaur will appear a certain number of seconds after the player has first moved from that corner.
 - The Minotaur will appear (cells width on maze, divided by 2) seconds after the player has first moved from that corner.
+- When the Minotaur appears, he says "awake."
 - Controls are based on the 2D view on the right.
 - The player of the game is a gray arrow. The tip of the arrow points forward.
 - At the beginning, players will not see the entire maze on the 2D grid. At the beginning, all the squares show as gray.
@@ -25,8 +26,11 @@ Create a single-page app in a single HTML file with the following requirements:
 - If the player types the right arrow, the arrow turns 90 degrees to the right.
 - If the player types the up arrow, if there is not a wall in the way, it moves one square in the direction it points.
 - The Minotaur will start moving (cells width on maze) seconds after the player has first moved from that corner.
+- When the Minotaur starts moving, he says "go."
 - For each step, the minotaur will take the next steps on the closest path to the play - each step is optimal.
 - For each step, the minotaur will follow the same rules as the player. For example, The Minotaur cannot do through walls.
+- If the Minotaur reaches the same square as the player, the center below the views says: You are defeated.
+- If the Minotaur reaches the same square as the player, the Reset Maze button starts a new game.
 - The map on the left is a 3D view of the map. The ground is green grass. The walls are red bricks. The skies are blue.
 - On the 3D view of the map, the point of view is from the gray arrow. You cannot see the arrow in the picture - it is the arrow's point of view.
 - On the 3D view of the map, the point of view from the gray arrow is 5 feet tall. The red brick walls are 10 feet tall.

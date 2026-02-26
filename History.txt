@@ -91,15 +91,25 @@ The game suggested setting a game state from playing to won (or lost or paused) 
 but maybe with more changes.
 
 
+Version 00.07	18 minutes dev	1 minutes code gen	8 minutes test		2 hours 14
+
+Now we add a new form of special effect: the Minotaur talks. When he first appears (on each
+level) he says "awake". When he starts moving, he says "go." If the Minotaur captures the 
+player, he says "eat. eat." This was done by trying several voices (with the help of Chat)
+to find scary voice. A list is provided of the preferred voices to use. The volume and speed
+are adjusted. A function is created to create the speaking voice. Finally, the easy part,
+the voice is uttered when the activities in the game occur.
+This took some effort. On the upside, no defects along the way.
+
+
 
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
-TODO: If the player and Minotaur touch, it is game over.
-TODO: Add speech for Minotaur. When it appears, it says "awake". When it starts moving, it
-	says "go". When it can first see the player, it says "food". If it catches the player
-	it says "eat...eat"
+TODO: When it can first see the player, it says "food". 
 TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
 	sets the level to 4; other code sets it back to 0. See if this can be cleaned.
 TODO: Let hitting Enter press the Reset Maze button.
+TODO: The button should not always says Reset Maze. For example, if the player is caught, the
+	button should say New Game.
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
