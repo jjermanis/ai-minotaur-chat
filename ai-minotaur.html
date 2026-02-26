@@ -83,7 +83,7 @@ const CELL_OPTIONS = [50, 40, 25, 20, 16];
 let levelIndex = 0;
 
 let minotaurVisible = false;
-let minotaurHasMoved = false;
+let minotaurActive = false;
 let minotaurTimerStarted = false;
 let minotaurStartTime = 0;
 let minotaurPath = [];
@@ -102,7 +102,8 @@ const player = {
     x: 0,
     y: 0,
     dir: 1,
-    escaped: false
+    escaped: false,
+    defeated: false,
 };
 const minotaur = {
     x: 0,
@@ -162,10 +163,11 @@ function initGame() {
     player.y = 0;
     player.dir = 1;
     player.escaped = false;
+    player.defeated = false;
 
     // --- Reset Minotaur State ---
     minotaurVisible = false;
-    minotaurHasMoved = false;
+    minotaurActive = false;
     minotaurTimerStarted = false;
     minotaurStartTime = 0;
 
@@ -195,20 +197,21 @@ function advanceLevel() {
 
 function updateMinotaurTimer() {
     if (!minotaurTimerStarted) return;
+    if (player.escaped) return;
 
     const gridSize = SIZE; // assuming square grid
     const elapsedSeconds = (performance.now() - minotaurStartTime) / 1000;
 
-    // Appear at (0,0) after N/2 seconds
-    if (!minotaurVisible && elapsedSeconds >= gridSize / 2) {
+    // Appear at (0,0) first...
+    if (!minotaurVisible && elapsedSeconds >= gridSize * 0.3) {
         minotaurVisible = true;
         minotaur.x = 0;
         minotaur.y = 0;
     }
 
-    // Activate after N seconds
-    if (!minotaurHasMoved && elapsedSeconds >= gridSize) {
-        minotaurHasMoved = true;
+    // ... and later become active
+    if (!minotaurActive && elapsedSeconds >= gridSize * 0.7) {
+        minotaurActive = true;
     }
 }
 
@@ -280,6 +283,7 @@ function computeMinotaurPath() {
 function updateMinotaurMovement() {
 
     if (!minotaurVisible) return;
+    if (!minotaurActive) return;
 
     const now = performance.now();
 
@@ -300,8 +304,19 @@ function updateMinotaurMovement() {
         const nextStep = minotaurPath.shift();
         minotaur.x = nextStep.x;
         minotaur.y = nextStep.y;
-minotaurHasMoved = true;
-	console.log(nextStep.x);
+    }
+}
+
+function checkMinotaurCollision() {
+    if (!minotaurActive) return;
+
+    if (
+        player.x === minotaur.x &&
+        player.y === minotaur.y
+    ) {
+        minotaurActive = false;
+        showDefeatMessage();
+        draw2D();
     }
 }
 
@@ -500,12 +515,21 @@ function drawMinotaur2D() {
     ctx2.restore();
 }
 
+function showDefeatMessage() {
+    statusEl.textContent = "You are defeated.";
+    player.defeated = true;
+    resetBtn.disabled=false;
+    resetBtn.style.display = "block";
+    // This is a bit of a quirk to resart at level 0. TODO: look into this
+    levelIndex = 4;
+}
 
 /* ============================
    INPUT / LOOP
    ============================ */
 document.addEventListener("keydown", e => {
     if (player.escaped) return;
+    if (player.defeated) return;
     if (e.key==="ArrowLeft") player.dir = (player.dir+3)%4;
     if (e.key==="ArrowRight") player.dir = (player.dir+1)%4;
     if (e.key==="ArrowUp") {
@@ -522,6 +546,7 @@ document.addEventListener("keydown", e => {
 
             if (player.x===SIZE-1 && player.y===SIZE-1) {
                 player.escaped=true;
+    		minotaurActive = false;
                 if (levelIndex < SIZE_OPTIONS.length - 1) {
                     statusEl.textContent = "You Escaped!"; 
                 } else {
@@ -539,6 +564,7 @@ resetBtn.addEventListener("click", advanceLevel);
 function loop() {
     updateMinotaurTimer();
     updateMinotaurMovement();
+    checkMinotaurCollision();
     draw3D();
     draw2D();
     requestAnimationFrame(loop);

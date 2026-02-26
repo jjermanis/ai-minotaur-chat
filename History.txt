@@ -76,13 +76,31 @@ within the maze data. Also, the order the directions of neighbors did not match 
 I fixed this manually. That worked! There are two minor defects - I will address that next.
 
 
-TODO: Currently the Minotaur moves as soon as it appears. There is some wait - fix it.
-TODO: After the player exits, the Minotaur still moves. He should stop: the level is over.
+Version 00.06	6 minutes dev	0 minutes code gen	3 minutes test		1 hour 47
+
+As stated in the last version, two small defects were added for the large change made to 
+move the Minotaur.
+One of the minor defects was that the Minotaur moved as soon as it appeared. It was supposed
+to do that after it waits after appearance. I expected a one-line code. It renamed the variable
+in its place to be more clear. Still easy
+The second is that after the player escapes, the Minotaur still moves. When the player exits, 
+everything should stop on that level. Easy one line change... with a nasty trick. This
+turns the Minotaur movement off... then MinotaurTimer runs again, turning it back on. I
+added a check in updateMinotaurTimer to not run when the player exits.
+The game suggested setting a game state from playing to won (or lost or paused) I don't see that now,
+but maybe with more changes.
+
+
+
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
 TODO: If the player and Minotaur touch, it is game over.
 TODO: Add speech for Minotaur. When it appears, it says "awake". When it starts moving, it
 	says "go". When it can first see the player, it says "food". If it catches the player
 	it says "eat...eat"
+TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
+	sets the level to 4; other code sets it back to 0. See if this can be cleaned.
+TODO: Let hitting Enter press the Reset Maze button.
+Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
 Chat: "For 2D Minotaur, Slightly flatten bottom of skull"
