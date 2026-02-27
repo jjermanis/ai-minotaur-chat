@@ -30,6 +30,8 @@ Create a single-page app in a single HTML file with the following requirements:
 - For each step, the minotaur will take the next steps on the closest path to the play - each step is optimal.
 - For each step, the minotaur will follow the same rules as the player. For example, The Minotaur cannot do through walls.
 - If the Minotaur reaches the same square as the player, the center below the views says: You are defeated.
+- The first time on each level that the Minotaur has line of sight to see the player, the Minotaur says "food."
+- If the Minotaur reaches the same square as the player, the Minotaur says "eat.eat."
 - If the Minotaur reaches the same square as the player, the Reset Maze button starts a new game.
 - The map on the left is a 3D view of the map. The ground is green grass. The walls are red bricks. The skies are blue.
 - On the 3D view of the map, the point of view is from the gray arrow. You cannot see the arrow in the picture - it is the arrow's point of view.

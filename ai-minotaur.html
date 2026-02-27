@@ -84,6 +84,7 @@ let levelIndex = 0;
 
 let minotaurVisible = false;
 let minotaurActive = false;
+let minotaurHasSeenPlayer = false;
 let minotaurTimerStarted = false;
 let minotaurStartTime = 0;
 let minotaurPath = [];
@@ -193,6 +194,7 @@ function initGame() {
     // --- Reset Minotaur State ---
     minotaurVisible = false;
     minotaurActive = false;
+    minotaurHasSeenPlayer = false;
     minotaurTimerStarted = false;
     minotaurStartTime = 0;
 
@@ -349,16 +351,89 @@ function checkMinotaurCollision() {
     }
 }
 
+function checkMinotaurVision() {
+    if (!minotaurActive) return;
+    if (player.defeated || player.escaped) return;
+    if (minotaurHasSeenPlayer) return;
+
+    if (hasLineOfSight()) {
+        minotaurHasSeenPlayer = true;
+        minotaurSpeak("food");
+    }
+}
+
 function minotaurSpeak(text) {
     if (!selectedVoice) return;
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = selectedVoice;
-    utterance.pitch = 0.3;   // slightly deeper
-    utterance.rate = 0.6;    // slightly slower
+    utterance.pitch = 0.1;   // slightly deeper
+    utterance.rate = 0.5;    // slightly slower
     utterance.volume = 1.0;
 
     speechSynthesis.speak(utterance);
+}
+
+function hasLineOfSight() {
+    if (!minotaurVisible) return false;
+
+    // Start at minotaur center
+    const startX = minotaur.x + 0.5;
+    const startY = minotaur.y + 0.5;
+
+    // Target is player center
+    const targetX = player.x + 0.5;
+    const targetY = player.y + 0.5;
+
+    const dx = targetX - startX;
+    const dy = targetY - startY;
+
+    const angle = Math.atan2(dy, dx);
+
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
+
+    let prevX = startX;
+    let prevY = startY;
+
+    // Distance between them
+    const maxDist = Math.sqrt(dx * dx + dy * dy);
+
+    for (let t = 0; t < maxDist; t += 0.02) {
+
+        const x = startX + cos * t;
+        const y = startY + sin * t;
+
+        const cx = Math.floor(x);
+        const cy = Math.floor(y);
+
+        // Out of bounds = blocked
+        if (cx < 0 || cy < 0 || cx >= SIZE || cy >= SIZE) {
+            return false;
+        }
+
+        const cell = maze[cy][cx];
+
+        // EXACT same wall detection as castRay
+        if (
+            (cell.walls[0] && y < cy + 0.01) ||
+            (cell.walls[2] && y > cy + 0.99) ||
+            (cell.walls[3] && x < cx + 0.01) ||
+            (cell.walls[1] && x > cx + 0.99)
+        ) {
+            return false;
+        }
+
+        // If we've entered the player's cell → visible
+        if (cx === player.x && cy === player.y) {
+            return true;
+        }
+
+        prevX = x;
+        prevY = y;
+    }
+
+    return false;
 }
 
 /* ============================
@@ -609,6 +684,7 @@ speechSynthesis.onvoiceschanged = function() {
 function loop() {
     updateMinotaurTimer();
     updateMinotaurMovement();
+    checkMinotaurVision();
     checkMinotaurCollision();
     draw3D();
     draw2D();

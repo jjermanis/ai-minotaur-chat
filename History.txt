@@ -102,6 +102,26 @@ the voice is uttered when the activities in the game occur.
 This took some effort. On the upside, no defects along the way.
 
 
+Version 00.08	12 minutes dev	2 minutes code gen	4 minutes test		2 hours 32
+
+We will add the last voice for now. For each level, the first time the Minotaur can see a player
+(no peaking through the wall), it will say "food." I expected this to be the most challenging.
+And it was more tricky than expected. 
+I provided detailed rules to Chat. For it's first attempt, it based it around Bresenham's line
+algorithm. It short: for sure it is the wrong algorithm. I'd put Bresenham and what's needed in 
+the same category (calculating lines on a grid), but it is not at all useful to solve the 
+problem (is there a line between Point A and B). To confirm, I tried using this. Not even
+close.
+I pointed at an existing algorithm that is similar. Along a line, we need to see how far it
+goes before it collides. I pointed at the existing code (draw3D and castRay) that uses this.
+I provided it to Chat. It was a similar outcome: the result was not at all close.
+For lack of a better explanation, I think Chat was confused. I gave it a copy of the source
+for 00.07. I asked it to create a solution based on the previous paragraph (using a similar
+algorithm). Surprising at it might sound that totally work: no new description of the requested
+change was needed. An updated source of the code was the difference maker.
+We have 2D graphics and sound. Next is 3D graphics.
+
+
 
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
 TODO: When it can first see the player, it says "food". 
