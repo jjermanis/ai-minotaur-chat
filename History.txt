@@ -117,9 +117,35 @@ goes before it collides. I pointed at the existing code (draw3D and castRay) tha
 I provided it to Chat. It was a similar outcome: the result was not at all close.
 For lack of a better explanation, I think Chat was confused. I gave it a copy of the source
 for 00.07. I asked it to create a solution based on the previous paragraph (using a similar
-algorithm). Surprising at it might sound that totally work: no new description of the requested
+algorithm). Surprising as it might sound that totally work: no new description of the requested
 change was needed. An updated source of the code was the difference maker.
 We have 2D graphics and sound. Next is 3D graphics.
+
+
+Version 00.09	24 minutes	3 minute code gen	3 minutes test		3 hours 2
+
+Now, time to start adding the Minotaur to the 3D view. To start, it starts and remains at
+the upper-left corner. For now, the Minotaur will not move. Finally, it will always draw
+the Minotaur, even blocked by walls. This to keep it simple (relatively speaking).
+There were several defects. 
+The first is that the point-of-view by the Minotaur is off by 90 degrees. Specifically, 
+90 degrees to the left. I asked Chat to address. It was able to resolve: a value adjust to 
+an angle by PI/2 (aka 90 degrees) was needed. Simple change and it worked.
+The second issue was that the transparency was done oddly. Inside the Minotaur's body, many 
+cells are transparent. It was not desired, not good when deployed to the 3D map. On the 
+flipside, none of the black background in that image is transparent... so it is shown as a 
+black background around it. I told Chat about the transparency mistakes. It fixed on the 
+first attempt.
+The third issue was that the Minotaur was based on being laid out in the center of the
+screen. This does not look right, especially as you get distance: it's more like the
+Minotaur is floating. I asked Chat to address this. It made it better... but not perfect.
+The resolution was with the image itself. Chat was balancing the image. The was some white
+space, which in effect still had some white space. I edited the PNG file to get rid of the
+majority of the white space underneath. This was much better - to an extent, it floats
+but minor. Fixes will take a big of work: the real based should be a bit up in the image, 
+between the feet. But this is subtle and works now.
+This was exciting to see. Next step: have the walls block the view of the Minotaur in 3D
+mode, and get the Minotaur moving again (in both 2D and 3D).
 
 
 
@@ -130,10 +156,15 @@ TODO: There is a quirk for setting the level after getting captured. In showDefe
 TODO: Let hitting Enter press the Reset Maze button.
 TODO: The button should not always says Reset Maze. For example, if the player is caught, the
 	button should say New Game.
+TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of the Minotaur
+	image. To look better, it should balance within the image, between the feet.
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
 Chat: "For 2D Minotaur, Slightly flatten bottom of skull"
+Chat: "Add depth buffer"
+Chat: "Clip sprite behind walls"
+Chat: "True sprite column rendering"
 Design "Does the Minotaur move randomly?" No, it will go to the player as quick as it can.
 Design "Can the player see the Minotaur in 3D?" Yes, though not to start
 Design "Is it visible only if in line-of-sight?" Yes, for 3D. 2D, always visible

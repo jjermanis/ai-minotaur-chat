@@ -90,6 +90,8 @@ let minotaurStartTime = 0;
 let minotaurPath = [];
 let minotaurLastMoveTime = 0;
 const MINOTAUR_MOVE_DELAY = 500; // ms
+const minotaurImg = new Image();
+minotaurImg.src = "minotaur.png";
 
 SIZE = SIZE_OPTIONS[levelIndex];
 CELL = CELL_OPTIONS[levelIndex];
@@ -504,7 +506,78 @@ function draw3D() {
 
         ctx3.fillStyle = `rgb(${(c.r*light)|0},${(c.g*light)|0},${(c.b*light)|0})`;
         ctx3.fillRect(i*2, 200 - h/2, 2, h);
-    }
+    } 
+    drawMinotaur3D();
+}
+
+function drawMinotaur3D() {
+    if (!minotaurVisible) return;
+
+    // Minotaur world position (center of cell)
+    const mx = minotaur.x + 0.5;
+    const my = minotaur.y + 0.5;
+
+    // Player world position (center)
+    const px = player.x + 0.5;
+    const py = player.y + 0.5;
+
+    const dx = mx - px;
+    const dy = my - py;
+
+    const rawDistance = Math.sqrt(dx * dx + dy * dy);
+
+    // Compute angle from player to minotaur
+    const angleToMinotaur = Math.atan2(dy, dx);
+
+    // Player view direction
+    const playerAngle = player.dir * Math.PI / 2 - Math.PI / 2;
+
+    // Angle difference
+    let angleDiff = angleToMinotaur - playerAngle;
+
+    // Correct for fisheye
+    const distance = rawDistance * Math.cos(angleDiff);
+
+    // Normalize angle to [-PI, PI]
+    while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+    while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+
+    // If outside FOV, do not draw
+    if (Math.abs(angleDiff) > FOV / 2) return;
+
+    // Convert angle to screen X
+    const screenX = (0.5 + angleDiff / FOV) * 400;
+
+    // ----------------------------
+    // SIZE CALCULATION
+    // ----------------------------
+
+    // Wall height reference:
+    // h = 300 / dist
+    // That represents 10 feet tall.
+
+    const wallHeight = 300 / distance;
+
+    // Minotaur is 8 ft tall, so scale proportionally
+    const spriteHeight = wallHeight * (8 / 10);
+
+    const spriteWidth = spriteHeight * (minotaurImg.width / minotaurImg.height);
+
+    // Compute projected ground position
+    const horizonY = 200; // screenHeight / 2
+
+    const groundY = horizonY + wallHeight / 2;
+
+    // Feet should touch ground
+    const screenY = groundY - spriteHeight;
+
+    ctx3.drawImage(
+        minotaurImg,
+        screenX - spriteWidth / 2,
+        screenY,
+        spriteWidth,
+        spriteHeight
+    );
 }
 
 function draw2D() {
@@ -683,7 +756,7 @@ speechSynthesis.onvoiceschanged = function() {
 
 function loop() {
     updateMinotaurTimer();
-    updateMinotaurMovement();
+    // updateMinotaurMovement(); // TEMP removal for 3D changes
     checkMinotaurVision();
     checkMinotaurCollision();
     draw3D();
