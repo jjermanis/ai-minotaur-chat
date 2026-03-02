@@ -148,9 +148,22 @@ This was exciting to see. Next step: have the walls block the view of the Minota
 mode, and get the Minotaur moving again (in both 2D and 3D).
 
 
+Version 00.10	11 minutes	1 minute code gen	4 minutes test		3 hours 18
+
+Getting back to the game playing like normal, I wanted to have the walls block the Minotaur
+as expected. I suggested that it would draw the 3D view, like normal, then draw the Minotaur,
+THEN redraw the walls closer to the player. I recommended this to Chat - it had better
+idea. Instead of drawing some walls twice, it would skip the walls closer to the player, then
+render those walls after placing the Minotaur. I was skeptical, but I asked Chat to give it
+a try. It worked! Perfect, handled testing, no changes.
+The other thing was to allow the Minotaur to move again. For dev purposes, I commented out
+the Minotaur movement in Version 00.08. I removed the comment. It worked: no issues.
+This is close to the completion of an initial version. I want to make some UI changes when
+the Minotaur captures the player.
+
+
 
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
-TODO: When it can first see the player, it says "food". 
 TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
 	sets the level to 4; other code sets it back to 0. See if this can be cleaned.
 TODO: Let hitting Enter press the Reset Maze button.
