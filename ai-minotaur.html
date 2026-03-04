@@ -81,6 +81,7 @@ const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
 const MAX_LIGHT_DIST = 12;
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
 const CELL_OPTIONS = [50, 40, 25, 20, 16];
+const MINOTAUR_STEP_TIMES = [600, 550, 500, 450, 400];
 
 let levelIndex = 0;
 
@@ -91,7 +92,7 @@ let minotaurTimerStarted = false;
 let minotaurStartTime = 0;
 let minotaurPath = [];
 let minotaurLastMoveTime = 0;
-const MINOTAUR_MOVE_DELAY = 500; // ms
+let minotaurStepDelay = MINOTAUR_STEP_TIMES[0]; 
 const minotaurImg = new Image();
 minotaurImg.src = "minotaur.png";
 
@@ -113,6 +114,7 @@ const player = {
 const minotaur = {
     x: 0,
     y: 0,
+    dir: 1,
 };
 
 // Contexts
@@ -206,6 +208,7 @@ function initGame() {
     // Reset position (invisible until triggered)
     minotaur.x = 0;
     minotaur.y = 0;
+    minotaur.dir = 1;  // face right at start
 
     // UI reset
     statusEl.textContent = "";
@@ -220,6 +223,7 @@ function advanceLevel() {
     } else {
         levelIndex = 0;
     }
+    minotaurStepDelay = MINOTAUR_STEP_TIMES[levelIndex];
 
     sizeIndex = levelIndex;
     SIZE = SIZE_OPTIONS[sizeIndex];
@@ -323,11 +327,11 @@ function updateMinotaurMovement() {
 
     const now = performance.now();
 
-    if (now - minotaurLastMoveTime < MINOTAUR_MOVE_DELAY) return;
+    if (now - minotaurLastMoveTime < minotaurStepDelay) return;
 
     minotaurLastMoveTime = now;
 
-    // If no path or player moved, recompute
+    // Recompute path if needed
     if (
         minotaurPath.length === 0 ||
         minotaurPath[minotaurPath.length - 1].x !== player.x ||
@@ -336,10 +340,33 @@ function updateMinotaurMovement() {
         minotaurPath = computeMinotaurPath();
     }
 
-    if (minotaurPath.length > 0) {
-        const nextStep = minotaurPath.shift();
+    if (minotaurPath.length === 0) return;
+
+    const nextStep = minotaurPath[0];
+
+    const dx = nextStep.x - minotaur.x;
+    const dy = nextStep.y - minotaur.y;
+
+    // Convert dx/dy to direction index
+    let requiredDir;
+
+    if (dx === 1) requiredDir = 1;
+    else if (dx === -1) requiredDir = 3;
+    else if (dy === 1) requiredDir = 2;
+    else if (dy === -1) requiredDir = 0;
+    else return; // should never happen
+
+    // If facing correct direction → move
+    if (minotaur.dir === requiredDir) {
+
         minotaur.x = nextStep.x;
         minotaur.y = nextStep.y;
+
+        minotaurPath.shift(); // consume step
+
+    } else {
+        // Turn only (costs a tick)
+        minotaur.dir = requiredDir;
     }
 }
 

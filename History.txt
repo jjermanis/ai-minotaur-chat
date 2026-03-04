@@ -177,7 +177,22 @@ The game is playable. This is a release. Next will be several UI optimizations, 
 player improvement.
 
 
-Version 00.11 is Version 00
+Version 00.11 is Release Version 00
+
+
+Version 01.00	12 minutes	1 minute code gen	3 minutes test		3 hours 46
+
+Now the core functionality is in place. For this version, I will focus on refinement, both in
+the game play, as well as UI changes. The first thing I went to add was variable Minotaur
+based on the level - he starts slow and gets faster.
+Implementing this is easy: put the speed for each level in an array an use that. Looking for
+good speeds for each level, I noticed a challenge. Moving at the speed for each level for the
+Minotaur is just taking steps. The Minotaur does not need to turn. This makes the game 
+unbalanced - the player needs some time to take steps. I requested to Chat to change the
+Minotaur movement. If it is not facing direction of the next step, it takes time to turn to
+that direction.
+This was simple: the app keeps track of the Minotaur direction. If the next step needs to 
+change, it uses the time to change to that direction,
 
 
 
@@ -189,8 +204,6 @@ TODO: The button should not always says Reset Maze. For example, if the player i
 	button should say New Game.
 TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of the Minotaur
 	image. To look better, it should balance within the image, between the feet.
-TODO: It should take Minotaur some time to turn. It takes time for a person to turn the player.
-	Make turning a move makes it more fair.
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
