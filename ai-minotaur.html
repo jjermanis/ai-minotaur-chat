@@ -73,6 +73,8 @@ canvas {
 <script>
 let SIZE;
 let CELL;
+const STATE_PLAYING = 0;
+const STATE_DEFEATED = 1;
 const FOV = Math.PI / 3;
 const RAYS = 200;
 const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
@@ -161,6 +163,7 @@ function dfs(x, y) {
    INIT / RESET GAME
    ============================ */
 function initGame() {
+
     selectMinotaurVoice();
     // Build maze + wall colors
     for (let y = 0; y < SIZE; y++) {
@@ -208,6 +211,7 @@ function initGame() {
     statusEl.textContent = "";
     resetBtn.disabled = true;
     resetBtn.style.display = "none";
+    gameState = STATE_PLAYING;
 }
 
 function advanceLevel() {
@@ -346,10 +350,8 @@ function checkMinotaurCollision() {
         player.x === minotaur.x &&
         player.y === minotaur.y
     ) {
-        minotaurActive = false;
-	minotaurSpeak("eat.. eat");
-        showDefeatMessage();
-        draw2D();
+        minotaurSpeak("eat.. eat");
+        enterDefeatState();
     }
 }
 
@@ -489,6 +491,11 @@ function castRay(angle) {
    ============================ */
 function draw3D() {
 
+    if (gameState === STATE_DEFEATED) {
+        drawDefeatScreen();
+        return;
+    }
+
     // --- SKY & FLOOR ---
     ctx3.fillStyle = "#4fc3f7";
     ctx3.fillRect(0, 0, 400, 200);
@@ -627,7 +634,7 @@ function draw2D() {
         if (w[3]) ctx2.beginPath(),ctx2.moveTo(px,py),ctx2.lineTo(px,py+CELL),ctx2.stroke();
     }
 
-    if (!player.escaped) {
+    if (!player.escaped && gameState === STATE_PLAYING) {
         ctx2.save();
         ctx2.translate(player.x*CELL + CELL/2, player.y*CELL + CELL/2);
         ctx2.rotate(player.dir * Math.PI/2 - Math.PI/2);
@@ -726,12 +733,47 @@ function drawMinotaur2D() {
     ctx2.restore();
 }
 
-function showDefeatMessage() {
-    statusEl.textContent = "You are defeated.";
+function drawDefeatScreen() {
+
+    // Full blue background (same as sky)
+    ctx3.fillStyle = "#4fc3f7";
+    ctx3.fillRect(0, 0, 400, 400);
+
+    // Horns ~100px from top
+    const topMargin = 50;
+
+    // Image bottom at bottom of canvas
+    const targetHeight = 550 - topMargin;
+
+    const aspect = minotaurImg.width / minotaurImg.height;
+    const targetWidth = targetHeight * aspect;
+
+    const x = (400 - targetWidth) / 2;
+    const y = topMargin;
+
+    ctx3.drawImage(
+        minotaurImg,
+        x,
+        y,
+        targetWidth,
+        targetHeight
+    );
+}
+
+function enterDefeatState() {
+
+    if (gameState !== STATE_PLAYING) return;
+
+    gameState = STATE_DEFEATED;
+
     player.defeated = true;
-    resetBtn.disabled=false;
+    minotaurActive = false;
+
+    statusEl.textContent = "You are defeated.";
+    resetBtn.disabled = false;
     resetBtn.style.display = "block";
-    // This is a bit of a quirk to resart at level 0. TODO: look into this
+
+    // Chat thought this odd case was fixed. It is not. Still TODO
     levelIndex = 4;
 }
 
@@ -777,12 +819,17 @@ speechSynthesis.onvoiceschanged = function() {
 };
 
 function loop() {
-    updateMinotaurTimer();
-    updateMinotaurMovement(); // TEMP removal for 3D changes
-    checkMinotaurVision();
-    checkMinotaurCollision();
+    if (gameState === STATE_PLAYING) {
+
+        updateMinotaurTimer();
+        updateMinotaurMovement();
+        checkMinotaurVision();
+        checkMinotaurCollision();
+    }
+
     draw3D();
     draw2D();
+
     requestAnimationFrame(loop);
 }
 

@@ -162,6 +162,24 @@ This is close to the completion of an initial version. I want to make some UI ch
 the Minotaur captures the player.
 
 
+Version 00.11	9 minutes	1 minute code gen	2 minutes test		3 hours 30
+
+As indicated, this is the last feature to add before a version completion. The game is
+programmed for the Minotaur to capture the player, and it is recognizing as game over.
+This works, with no visuals to show. I want to change this for the POV to switch to pure
+blue background - this represents being flat on your back. The Minotaur will be over the
+player. I asked Chat to implement this.
+It worked well. There were more sources changes than I imagine, but it was close to what I
+wanted. I did need to tweak the size (manually) but it was a moderate change. Also, there 
+was a small defect: when defeated by the Minotaur, it takes the player to the next level. It
+should reset to Level 1. That was a quick and easy change.
+The game is playable. This is a release. Next will be several UI optimizations, and game
+player improvement.
+
+
+Version 00.11 is Version 00
+
+
 
 TODO: The speed will be passed on the level. The higher the level, the faster the speed.
 TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
@@ -171,6 +189,8 @@ TODO: The button should not always says Reset Maze. For example, if the player i
 	button should say New Game.
 TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of the Minotaur
 	image. To look better, it should balance within the image, between the feet.
+TODO: It should take Minotaur some time to turn. It takes time for a person to turn the player.
+	Make turning a move makes it more fair.
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
