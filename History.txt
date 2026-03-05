@@ -204,6 +204,12 @@ TODO: The button should not always says Reset Maze. For example, if the player i
 	button should say New Game.
 TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of the Minotaur
 	image. To look better, it should balance within the image, between the feet.
+TODO: Adjust colors. Does green grass for the ground work?
+TODO: Adjust colors. Do we want a red wall? Maybe gray?
+TODO: Adjust colors. Do we want a blue sky? Do we change this color (and maybe others) from
+	level to level
+TODO: Adjust to easy TEST mode. Instead of comments here and there, just triggered with one variable
+TODO: a victory screen after completing the 5th level
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"

@@ -81,9 +81,10 @@ const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
 const MAX_LIGHT_DIST = 12;
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
 const CELL_OPTIONS = [50, 40, 25, 20, 16];
-const MINOTAUR_STEP_TIMES = [600, 550, 500, 450, 400];
+const MINOTAUR_STEP_TIMES = [360, 280, 240, 220, 210];
 
-let levelIndex = 0;
+// TEMP - KEEP THIS, BUT ADJUST FOR START LEVEL
+let levelIndex = 4;
 
 let minotaurVisible = false;
 let minotaurActive = false;
@@ -117,12 +118,17 @@ const minotaur = {
     dir: 1,
 };
 
+// TEMP FOR TESTING
+let stepsPerLevel = 0;
+let minoStepsPerLevel = 0;
+let stepsAtMinoGo = 0;
+//
+
 // Contexts
 const ctx3 = view3d.getContext("2d");
 const ctx2 = view2d.getContext("2d");
 const statusEl = document.getElementById("status");
 const resetBtn = document.getElementById("resetBtn");
-
 
 let selectedVoice = null;
 
@@ -215,9 +221,17 @@ function initGame() {
     resetBtn.disabled = true;
     resetBtn.style.display = "none";
     gameState = STATE_PLAYING;
+
+    // TEMP for testing
+    stepsPerLevel = 0;
+    minoStepsPerLevel = 0;
+    stepsAtMinoStart = 0;
+    minotaurStepDelay = MINOTAUR_STEP_TIMES[levelIndex];
+    //
 }
 
 function advanceLevel() {
+
     if (levelIndex < SIZE_OPTIONS.length - 1) {
         levelIndex++;
     } else {
@@ -252,6 +266,10 @@ function updateMinotaurTimer() {
     if (!minotaurActive && elapsedSeconds >= gridSize * 0.7) {
         minotaurSpeak("go");
         minotaurActive = true;
+
+	// TEST JWJ
+        stepsAtMinoGo = stepsPerLevel;
+	// 
     }
 }
 
@@ -363,7 +381,9 @@ function updateMinotaurMovement() {
         minotaur.y = nextStep.y;
 
         minotaurPath.shift(); // consume step
-
+        // TEMP
+        minoStepsPerLevel++;
+        //
     } else {
         // Turn only (costs a tick)
         minotaur.dir = requiredDir;
@@ -802,6 +822,10 @@ function enterDefeatState() {
 
     // Chat thought this odd case was fixed. It is not. Still TODO
     levelIndex = 4;
+
+    // TEMP for testing
+    statusEl.textContent = "Steps:" + stepsPerLevel + ", Stps at M start:" + stepsAtMinoGo + ", Minotaur steps: " + minoStepsPerLevel;
+    //
 }
 
 /* ============================
@@ -819,6 +843,8 @@ document.addEventListener("keydown", e => {
             player.x+=dx; 
             player.y+=dy;
 
+            stepsPerLevel++; // TEMP FOR TESTING
+
             if (!minotaurTimerStarted && (player.x !== 0 || player.y !== 0)) {
                 minotaurTimerStarted = true;
                 minotaurStartTime = performance.now();
@@ -832,6 +858,10 @@ document.addEventListener("keydown", e => {
                 } else {
                     statusEl.textContent = "You Win!"
                 }
+                // TEMP for testing
+                statusEl.textContent = "Steps:" + stepsPerLevel + ", Stps at M start:" + stepsAtMinoGo + ", Minotaur steps: " + minoStepsPerLevel;
+		//
+
                 resetBtn.disabled=false;
     		resetBtn.style.display = "block";
             }
@@ -839,7 +869,9 @@ document.addEventListener("keydown", e => {
     }
 });
 
-resetBtn.addEventListener("click", advanceLevel);
+// TEMP to test level
+//resetBtn.addEventListener("click", advanceLevel);
+resetBtn.addEventListener("click", initGame);
 
 speechSynthesis.onvoiceschanged = function() {
     selectMinotaurVoice();
