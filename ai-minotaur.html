@@ -78,6 +78,13 @@ const STATE_DEFEATED = 1;
 const FOV = Math.PI / 3;
 const RAYS = 200;
 const DEFAULT_WALL_COLOR = { r:180, g:30, b:30 };
+const SKY_COLORS = [
+    { r: 79,  g: 195, b: 247 },  // Sunnny sky
+    { r: 120, g: 200, b: 240 },  // Slightly darker
+    { r: 150, g: 160, b: 200 },  // Muted dusk
+    { r: 200, g: 140, b: 150 },  // Earky sunset
+    { r: 255, g: 120, b: 80 }    // Sunset orange
+];
 const MAX_LIGHT_DIST = 12;
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
 const CELL_OPTIONS = [50, 40, 25, 20, 16];
@@ -219,19 +226,20 @@ function initGame() {
 }
 
 function advanceLevel() {
-
     if (levelIndex < SIZE_OPTIONS.length - 1) {
         levelIndex++;
-        minotaurStepDelay = MINOTAUR_STEP_TIMES[levelIndex];
     } else {
         levelIndex = 0;
-        minotaurStepDelay = MINOTAUR_STEP_TIMES[MINOTAUR_STEP_TIMES.length - 1];
     }
+    SIZE = SIZE_OPTIONS[levelIndex];
+    CELL = CELL_OPTIONS[levelIndex];
+    initGame();
+}
 
-    sizeIndex = levelIndex;
-    SIZE = SIZE_OPTIONS[sizeIndex];
-    CELL = CELL_OPTIONS[sizeIndex];
-
+function restartGame() {
+    levelIndex = 0;
+    SIZE = SIZE_OPTIONS[levelIndex];
+    CELL = CELL_OPTIONS[levelIndex];
     initGame();
 }
 
@@ -526,7 +534,8 @@ function draw3D() {
     }
 
     // --- SKY & FLOOR ---
-    ctx3.fillStyle = "#4fc3f7";
+    const sky = SKY_COLORS[levelIndex];
+    ctx3.fillStyle = `rgb(${sky.r}, ${sky.g}, ${sky.b})`;
     ctx3.fillRect(0, 0, 400, 200);
     ctx3.fillStyle = "#2e7d32";
     ctx3.fillRect(0, 200, 400, 200);
@@ -764,8 +773,9 @@ function drawMinotaur2D() {
 
 function drawDefeatScreen() {
 
-    // Full blue background (same as sky)
-    ctx3.fillStyle = "#4fc3f7";
+    // Sky background
+    const sky = SKY_COLORS[levelIndex];
+    ctx3.fillStyle = `rgb(${sky.r}, ${sky.g}, ${sky.b})`;
     ctx3.fillRect(0, 0, 400, 400);
 
     // Horns ~100px from top
@@ -801,9 +811,6 @@ function enterDefeatState() {
     statusEl.textContent = "You are defeated.";
     resetBtn.disabled = false;
     resetBtn.style.display = "block";
-
-    // Chat thought this odd case was fixed. It is not. Still TODO
-    levelIndex = 4;
 }
 
 /* ============================
@@ -842,7 +849,13 @@ document.addEventListener("keydown", e => {
     }
 });
 
-resetBtn.addEventListener("click", advanceLevel);
+resetBtn.addEventListener("click", () => {
+    if (gameState === STATE_DEFEATED) {
+        restartGame();
+    } else {
+        advanceLevel();
+    }
+});
 
 speechSynthesis.onvoiceschanged = function() {
     selectMinotaurVoice();

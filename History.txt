@@ -220,6 +220,21 @@ I removed the TEMP code to provide the speed data. One could keep it - I found i
 to leave behind.
 
 
+Version 01.03	12 minutes	2 minute code gen	8 minutes test		4 hours 43
+
+The colors were the colors from the original game. Now, I'm moving them over to match the
+theme of Minotaur. Today I start with the sky. The theme I wanted would be that the sky 
+(on Level 1) would exactly match the original version. As levels process, it's more towards
+sunset. Chat did this. The colors weren't perfect - I applied the RGB values to get closer.
+It's not perfect... but I'll continue with this and consider later.
+This introduced a defect as a side effect. When the Minotaur captures the player, the
+screen always goes to orange in Level 5. Something like this wasn't noticeable before -
+the sky always looked the say. But this level (as a quirk) changed into Level 4 to get
+ready to restart. I told Chat about the issue, specifically to avoid seeing the Level 4
+as a workaround. Full credit: it coded it to avoid that. The background when captured now
+matches the current sky.
+
+
 
 TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
 	sets the level to 4; other code sets it back to 0. See if this can be cleaned.
@@ -234,6 +249,8 @@ TODO: Adjust colors. Do we want a blue sky? Do we change this color (and maybe o
 	level to level
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 TODO: a victory screen after completing the 5th level
+TODO: one sky color changes, it ends at sunset with an orange sky. Maybe that is Level 4, and the final
+	level is night?
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
