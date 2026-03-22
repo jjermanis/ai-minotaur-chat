@@ -235,9 +235,15 @@ as a workaround. Full credit: it coded it to avoid that. The background when cap
 matches the current sky.
 
 
+Version 01.04	6 minutes	0 minute code gen	2 minutes test		4 hours 51
 
-TODO: There is a quirk for setting the level after getting captured. In showDefeatMessage(), it
-	sets the level to 4; other code sets it back to 0. See if this can be cleaned.
+The next for colors are the walls and the ground. These are standard colors, not changing
+with levels like the sky. The ground changes from grassy green to a earthy brown. The
+walls are a silver color. They were easy and... they look fine? I might change them again
+at some point, but I'm alright for now.
+
+
+
 TODO: Let hitting Enter press the Reset Maze button.
 TODO: The button should not always says Reset Maze. I'd say never. If the player is caught, the
 	button should say New Game. If the escape (not the end level) it should say Next Level.
@@ -245,12 +251,11 @@ TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of t
 	image. To look better, it should balance within the image, between the feet.
 TODO: Adjust colors. Does green grass for the ground work?
 TODO: Adjust colors. Do we want a red wall? Maybe gray?
-TODO: Adjust colors. Do we want a blue sky? Do we change this color (and maybe others) from
-	level to level
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 TODO: a victory screen after completing the 5th level
-TODO: one sky color changes, it ends at sunset with an orange sky. Maybe that is Level 4, and the final
+TODO: sky color changes, it ends at sunset with an orange sky. Maybe that is Level 4, and the final
 	level is night?
+TODO: Maybe try tall walls? Instead of 10 feet tall, maybe something subtle like 12? Maybe more?
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
