@@ -243,7 +243,17 @@ walls are a silver color. They were easy and... they look fine? I might change t
 at some point, but I'm alright for now.
 
 
+Version 01.05	4 minutes	0 minute code gen	1 minute test		4 hours 56
 
+Speaking of changing colors, I didn't like all the sky colors added in Version 01.03. The
+"pink" sky for Level 4? I didn't hate it, but I didn't like it. To tweak, I made the sunset
+sky (had been Level 5) Level 4, and made a new Level 5: Night Time. I provided a description
+for Chat to provide. I liked it, I like the five level sequence.
+
+
+
+TODO: The web site name of the table is the old maze. Update it to Minotar. Easy change.
+TODO: Add a Mute button. No idea from the game when this is turned on.
 TODO: Let hitting Enter press the Reset Maze button.
 TODO: The button should not always says Reset Maze. I'd say never. If the player is caught, the
 	button should say New Game. If the escape (not the end level) it should say Next Level.
@@ -253,8 +263,6 @@ TODO: Adjust colors. Does green grass for the ground work?
 TODO: Adjust colors. Do we want a red wall? Maybe gray?
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 TODO: a victory screen after completing the 5th level
-TODO: sky color changes, it ends at sunset with an orange sky. Maybe that is Level 4, and the final
-	level is night?
 TODO: Maybe try tall walls? Instead of 10 feet tall, maybe something subtle like 12? Maybe more?
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
