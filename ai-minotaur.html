@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Maze</title>
+<title>Minotaur</title>
 <style>
 body {
     margin: 0;
@@ -67,7 +67,7 @@ canvas {
 </div>
 <div id="statusRow">
     <div id="status"></div>
-    <button id="resetBtn" class="ui-button" disabled style="display:none;">Reset Maze</button>
+    <button id="resetBtn" class="ui-button" disabled style="display:none;">New Game</button>
 </div>
 
 <script>
@@ -809,6 +809,7 @@ function enterDefeatState() {
     minotaurActive = false;
 
     statusEl.textContent = "You are defeated.";
+    resetBtn.textContent = "New Game";
     resetBtn.disabled = false;
     resetBtn.style.display = "block";
 }
@@ -842,6 +843,7 @@ document.addEventListener("keydown", e => {
                     statusEl.textContent = "You Win!"
                 }
 
+                resetBtn.textContent = (levelIndex === SIZE_OPTIONS.length - 1) ? "New Game" : "Next Level";
                 resetBtn.disabled=false;
     		resetBtn.style.display = "block";
             }
