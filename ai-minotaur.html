@@ -536,9 +536,9 @@ function draw3D() {
     // --- SKY & FLOOR ---
     const sky = SKY_COLORS[levelIndex];
     ctx3.fillStyle = `rgb(${sky.r}, ${sky.g}, ${sky.b})`;
-    ctx3.fillRect(0, 0, 400, 200);
+    ctx3.fillRect(0, 0, 400, 167);
     ctx3.fillStyle = "rgb(120, 80, 40)";
-    ctx3.fillRect(0, 200, 400, 200);
+    ctx3.fillRect(0, 167, 400, 233);
 
     const baseAngle = player.dir * Math.PI / 2 - Math.PI / 2;
 
@@ -561,7 +561,7 @@ function draw3D() {
 
         wallDepthBuffer[i] = correctedDist;
 
-        const h = 300 / correctedDist;
+        const h = 360 / correctedDist;
 
         const light = Math.max(0, 1 - rawDist / MAX_LIGHT_DIST);
         const c = wallColors[hit.cellY][hit.cellX][hit.wall];
@@ -569,7 +569,7 @@ function draw3D() {
         ctx3.fillStyle =
             `rgb(${(c.r * light) | 0},${(c.g * light) | 0},${(c.b * light) | 0})`;
 
-        ctx3.fillRect(i * 2, 200 - h / 2, 2, h);
+        ctx3.fillRect(i * 2, 167 - h / 2, 2, h);
     }
 
     // =====================================================
@@ -603,13 +603,13 @@ function draw3D() {
     if (spriteDistance <= 0.05) return;
 
     // Projection size
-    const wallHeight = 300 / spriteDistance;
-    const spriteHeight = wallHeight * (8 / 10);
+    const wallHeight = 360 / spriteDistance;
+    const spriteHeight = wallHeight * (8 / 12);
     const spriteWidth =
         spriteHeight *
         (minotaurImg.width / minotaurImg.height);
 
-    const horizonY = 200;
+    const horizonY = 167;
     const groundY = horizonY + wallHeight / 2;
 
     const spriteTop = groundY - spriteHeight;

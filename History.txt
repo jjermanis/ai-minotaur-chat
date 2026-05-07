@@ -261,14 +261,27 @@ Level". For getting to the end of the last level, or getting caught, it should s
 "New Game". This was an easy change, with the first version working
 
 
+Version 01.07	12 minute	1 minute code gen	3 minute test		5 hours 21
+
+As an adjustment, I wanted to make the walls larger. Not sure of the size. 12? 15? 20?
+Let's try and see what it looks like. Initially, I worked with Chat to increase the walls
+from 10 to 15 tall, keeping the POV at 5 feet. The change to increase the walls worked,
+but the POV did not: it stayed "in the middle". It would be 7.5 feet on a 15 foot fence.
+Chat fixed that, but there was a UI tweak. It was difficult to see, but the "horizon"
+was previously at the middle of the screen. Change the POV, it left some sky in the middle,
+underneath the fences. The horizon needed to be moved up to avoid that quirk. Now it worked
+well. I didn't like 15 feet high - it dropped visibility too much. I adjusted to 12 feet:
+quick and easy.
+
+
 
 TODO: Add a Mute button. No idea from the game when this is turned on.
 TODO: Let hitting Enter press the Reset Maze button.
+TODO: When the wall is very far away, it looks rather black. Seems like there should be a bit of a max darkness
 TODO: Small balance defect on the 3D Minotaur. It's balancing on the bottom of the Minotaur
 	image. To look better, it should balance within the image, between the feet.
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 TODO: a victory screen after completing the 5th level
-TODO: Maybe try tall walls? Instead of 10 feet tall, maybe something subtle like 12? Maybe more?
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"
