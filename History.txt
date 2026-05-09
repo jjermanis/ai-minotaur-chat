@@ -286,10 +286,32 @@ little convenient, you can also click the Enter button on the keyboard to click 
 button. That was quick and easy.
 
 
+Version 01.09	23 minutes	2 minute code gen	2 minute test		6 hours 3
 
+Something that has been on the TODO list for a while: a victory screen after completing
+the final level. I asked for a grassy field, blue skies, with hills and a forest. And a
+stack of gold bars out front. I asked Chat to ask question if they had any. They had
+many.
+* Does the victory screen show automatically after the final exit?
+* Does the New Game appear on this victory screen?
+* How are the golden bars arranged?
+* How far away are the gold bars?
+* How are the gold bars rendered?
+* What affect does this have on the 2D map?
+* Is anything animated?
+* How are the hills and forest placed?
+* Is the Minotaur seen?
+It created the application. It was not perfect, but the first pass was good. I made one
+manual change to make it more simple. There are several follow up items for this - this
+is a nice start.
+
+
+TODO: add to victory. A little toon of triumph? Dum dumdum dummm?
+TODO: added a delay of 1 second to switch between last exit and the victory being rendered.
+TODO: on victory, get the gold to look like a pyramid shape. Let's say 5 wide stack.
+TODO: do we need more trees? Just filling out the edges on the side
 TODO: Add a Mute button. No idea from the game when this is turned on.
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
-TODO: a victory screen after completing the 5th level
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
 Chat: "For 2D Minotaur, Add small black eye slits"

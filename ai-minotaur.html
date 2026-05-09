@@ -75,6 +75,7 @@ let SIZE;
 let CELL;
 const STATE_PLAYING = 0;
 const STATE_DEFEATED = 1;
+const STATE_VICTORY = 2;
 const FOV = Math.PI / 3;
 const RAYS = 200;
 const DEFAULT_WALL_COLOR = { r:130, g:140, b:160 };
@@ -87,6 +88,8 @@ const SKY_COLORS = [
     { r: 10, g: 15, b: 40 }      // Night Time
 ];
 const MAX_LIGHT_DIST = 14;
+//const SIZE_OPTIONS = [4, 4, 4, 4, 4];
+//const CELL_OPTIONS = [100, 100, 100, 100, 100];
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
 const CELL_OPTIONS = [50, 40, 25, 20, 16];
 const MINOTAUR_STEP_TIMES = [460, 320, 260, 220, 200];
@@ -534,6 +537,11 @@ function draw3D() {
         return;
     }
 
+    if (gameState === STATE_VICTORY) {
+        drawVictoryScreen();
+        return;
+    }
+
     // --- SKY & FLOOR ---
     const sky = SKY_COLORS[levelIndex];
     ctx3.fillStyle = `rgb(${sky.r}, ${sky.g}, ${sky.b})`;
@@ -649,6 +657,11 @@ function draw3D() {
 }
 
 function draw2D() {
+    if (gameState === STATE_VICTORY) {
+        ctx2.fillStyle = "rgb(56, 142, 60)";
+        ctx2.fillRect(0, 0, 400, 400);
+        return;
+    }
     ctx2.fillStyle = "rgb(120, 80, 40)";
     ctx2.fillRect(0,0,400,400);
     ctx2.strokeStyle = "rgb(110, 130, 140)";
@@ -772,6 +785,71 @@ function drawMinotaur2D() {
     ctx2.restore();
 }
 
+function drawVictoryScreen() {
+    // Sky (light blue)
+    ctx3.fillStyle = "rgb(135, 206, 235)";
+    ctx3.fillRect(0, 0, 400, 167);
+
+    // Ground (green grass)
+    ctx3.fillStyle = "rgb(56, 142, 60)";
+    ctx3.fillRect(0, 167, 400, 233);
+
+    // --- Hills (behind forest, sitting on horizon) ---
+    ctx3.fillStyle = "rgb(76, 153, 0)";
+    ctx3.beginPath();
+    ctx3.ellipse(100, 167, 130, 70, 0, Math.PI, 0);
+    ctx3.fill();
+    ctx3.beginPath();
+    ctx3.ellipse(220, 167, 160, 95, 0, Math.PI, 0);
+    ctx3.fill();
+    ctx3.beginPath();
+    ctx3.ellipse(340, 167, 120, 60, 0, Math.PI, 0);
+    ctx3.fill();
+
+    // --- Forest (dark tree line in front of hills) ---
+    const treeData = [
+        {x:10,  w:28, h:55}, {x:30,  w:32, h:70}, {x:55,  w:26, h:48},
+        {x:72,  w:30, h:62}, {x:95,  w:34, h:75}, {x:118, w:28, h:58},
+        {x:138, w:36, h:68}, {x:162, w:30, h:80}, {x:185, w:32, h:65},
+        {x:208, w:28, h:72}, {x:228, w:34, h:58}, {x:252, w:30, h:76},
+        {x:274, w:36, h:63}, {x:298, w:28, h:70}, {x:318, w:32, h:55},
+        {x:340, w:30, h:68}, {x:362, w:26, h:60}, {x:380, w:34, h:72},
+    ];
+    for (const t of treeData) {
+        ctx3.fillStyle = "rgb(62, 39, 35)";
+        ctx3.fillRect(t.x + t.w * 0.4, 167 - 12, t.w * 0.2, 14);
+        ctx3.fillStyle = "rgb(27, 94, 32)";
+        ctx3.beginPath();
+        ctx3.moveTo(t.x + t.w / 2, 167 - t.h);
+        ctx3.lineTo(t.x, 167 - 8);
+        ctx3.lineTo(t.x + t.w, 167 - 8);
+        ctx3.closePath();
+        ctx3.fill();
+    }
+
+    // --- Gold ingot stack (5 wide x 4 rows = 20 ingots) ---
+    const ingotW = 28, ingotH = 10, ingotGap = 2;
+    const cols = 5, rows = 4;
+    const stackW = cols * (ingotW + ingotGap) - ingotGap;
+    const stackH = rows * (ingotH + ingotGap) - ingotGap;
+    const stackX = (400 - stackW) / 2;
+    const stackY = 310 - stackH;
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const ix = stackX + col * (ingotW + ingotGap);
+            const iy = stackY + row * (ingotH + ingotGap);
+            ctx3.fillStyle = "rgb(212, 175, 55)";
+            ctx3.fillRect(ix, iy, ingotW, ingotH);
+            ctx3.fillStyle = "rgb(255, 223, 100)";
+            ctx3.fillRect(ix + 2, iy + 1, ingotW - 4, 3);
+            ctx3.fillStyle = "rgb(160, 120, 20)";
+            ctx3.fillRect(ix, iy + ingotH - 3, ingotW, 3);
+            ctx3.fillStyle = "rgb(180, 140, 30)";
+            ctx3.fillRect(ix, iy, 2, ingotH);
+        }
+    }
+}
+
 function drawDefeatScreen() {
 
     // Sky background
@@ -845,19 +923,18 @@ document.addEventListener("keydown", e => {
                 if (levelIndex < SIZE_OPTIONS.length - 1) {
                     statusEl.textContent = "You Escaped!"; 
                 } else {
-                    statusEl.textContent = "You Win!"
+                    statusEl.textContent = "You Win!";
+                    gameState = STATE_VICTORY;
                 }
-
-                resetBtn.textContent = (levelIndex === SIZE_OPTIONS.length - 1) ? "New Game" : "Next Level";
                 resetBtn.disabled=false;
-    		resetBtn.style.display = "block";
+    	        resetBtn.style.display = "block";
             }
         }
     }
 });
 
 resetBtn.addEventListener("click", () => {
-    if (gameState === STATE_DEFEATED) {
+    if (gameState === STATE_DEFEATED || gameState === STATE_VICTORY) {
         restartGame();
     } else {
         advanceLevel();
