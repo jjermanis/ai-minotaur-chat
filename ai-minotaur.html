@@ -95,6 +95,7 @@ const CELL_OPTIONS = [50, 40, 25, 20, 16];
 const MINOTAUR_STEP_TIMES = [460, 320, 260, 220, 200];
 
 let levelIndex = 0;
+let victoryFadeStart = 0;
 
 let minotaurVisible = false;
 let minotaurActive = false;
@@ -828,16 +829,18 @@ function drawVictoryScreen() {
     }
 
     // --- Gold ingot stack (5 wide x 4 rows = 20 ingots) ---
-    const ingotW = 28, ingotH = 10, ingotGap = 2;
-    const cols = 5, rows = 4;
-    const stackW = cols * (ingotW + ingotGap) - ingotGap;
-    const stackH = rows * (ingotH + ingotGap) - ingotGap;
-    const stackX = (400 - stackW) / 2;
-    const stackY = 310 - stackH;
-    for (let row = 0; row < rows; row++) {
+    const ingotW = 28, ingotH = 10, ingotGap = 1;
+    const totalRows = 6;
+    const baseY = 310;
+
+    for (let row = 0; row < totalRows; row++) {
+        const cols = totalRows - row;
+        const stackW = cols * (ingotW + ingotGap) - ingotGap;
+        const stackX = (400 - stackW) / 2;
+        const iy = baseY - row * (ingotH + ingotGap);
+
         for (let col = 0; col < cols; col++) {
             const ix = stackX + col * (ingotW + ingotGap);
-            const iy = stackY + row * (ingotH + ingotGap);
             ctx3.fillStyle = "rgb(212, 175, 55)";
             ctx3.fillRect(ix, iy, ingotW, ingotH);
             ctx3.fillStyle = "rgb(255, 223, 100)";
@@ -847,6 +850,12 @@ function drawVictoryScreen() {
             ctx3.fillStyle = "rgb(180, 140, 30)";
             ctx3.fillRect(ix, iy, 2, ingotH);
         }
+    }
+    const elapsed = performance.now() - victoryFadeStart;
+    const alpha = Math.max(0, 1 - elapsed / 1000);
+    if (alpha > 0) {
+        ctx3.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+        ctx3.fillRect(0, 0, 400, 400);
     }
 }
 
@@ -924,6 +933,7 @@ document.addEventListener("keydown", e => {
                     statusEl.textContent = "You Escaped!"; 
                 } else {
                     statusEl.textContent = "You Win!";
+                    victoryFadeStart = performance.now();
                     gameState = STATE_VICTORY;
                 }
                 resetBtn.disabled=false;

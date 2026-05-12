@@ -306,9 +306,18 @@ manual change to make it more simple. There are several follow up items for this
 is a nice start.
 
 
+Version 01.10	9 minutes	1 minute code gen	4 minute test		6 hours 17
+
+The major victory screen change has been made. Now, a few alternations.
+For the gold bars, instead of stacking them in a square, I asked for them to be arranged
+like a pyramid. This was an easy change for Chat to make. I liked it better - I added
+one more row, which was easy for me to do.
+The next change was to add a smooth rotation of the victory screen to fade in during the
+one second after exiting the last level. Chat provided the guide: quick and easy.
+
+
+
 TODO: add to victory. A little toon of triumph? Dum dumdum dummm?
-TODO: added a delay of 1 second to switch between last exit and the victory being rendered.
-TODO: on victory, get the gold to look like a pyramid shape. Let's say 5 wide stack.
 TODO: do we need more trees? Just filling out the edges on the side
 TODO: Add a Mute button. No idea from the game when this is turned on.
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
