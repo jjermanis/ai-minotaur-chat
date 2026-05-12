@@ -88,6 +88,7 @@ const SKY_COLORS = [
     { r: 10, g: 15, b: 40 }      // Night Time
 ];
 const MAX_LIGHT_DIST = 14;
+//Small maps size for easy testing
 //const SIZE_OPTIONS = [4, 4, 4, 4, 4];
 //const CELL_OPTIONS = [100, 100, 100, 100, 100];
 const SIZE_OPTIONS = [8, 10, 16, 20, 25];
@@ -809,6 +810,7 @@ function drawVictoryScreen() {
 
     // --- Forest (dark tree line in front of hills) ---
     const treeData = [
+        {x:-12, w:30, h:62},
         {x:10,  w:28, h:55}, {x:30,  w:32, h:70}, {x:55,  w:26, h:48},
         {x:72,  w:30, h:62}, {x:95,  w:34, h:75}, {x:118, w:28, h:58},
         {x:138, w:36, h:68}, {x:162, w:30, h:80}, {x:185, w:32, h:65},
@@ -857,6 +859,41 @@ function drawVictoryScreen() {
         ctx3.fillStyle = `rgba(0, 0, 0, ${alpha})`;
         ctx3.fillRect(0, 0, 400, 400);
     }
+}
+
+function playVictoryTune() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [
+        {f:261.6, d:0.10, t:0.00},
+        {f:329.6, d:0.10, t:0.00},
+        {f:392.0, d:0.10, t:0.00},
+
+        {f:261.6, d:0.10, t:0.22},
+        {f:329.6, d:0.10, t:0.22},
+        {f:392.0, d:0.10, t:0.22},
+
+        {f:329.6, d:0.10, t:0.44},
+        {f:415.3, d:0.10, t:0.44},
+        {f:523.3, d:0.10, t:0.44},
+
+        {f:349.2, d:0.65, t:0.70},
+        {f:440.0, d:0.65, t:0.70},
+        {f:523.3, d:0.65, t:0.70},
+    ];
+    notes.forEach(note => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(note.f, ctx.currentTime + note.t);
+        gain.gain.setValueAtTime(0, ctx.currentTime + note.t);
+        gain.gain.linearRampToValueAtTime(0.09, ctx.currentTime + note.t + 0.015);
+        gain.gain.setValueAtTime(0.09, ctx.currentTime + note.t + note.d - 0.02);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + note.t + note.d + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + note.t);
+        osc.stop(ctx.currentTime + note.t + note.d + 0.1);
+    });
 }
 
 function drawDefeatScreen() {
@@ -935,6 +972,7 @@ document.addEventListener("keydown", e => {
                     statusEl.textContent = "You Win!";
                     victoryFadeStart = performance.now();
                     gameState = STATE_VICTORY;
+                    playVictoryTune();
                 }
                 resetBtn.disabled=false;
     	        resetBtn.style.display = "block";

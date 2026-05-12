@@ -316,9 +316,17 @@ The next change was to add a smooth rotation of the victory screen to fade in du
 one second after exiting the last level. Chat provided the guide: quick and easy.
 
 
+Version 01.11	9 minutes	0 minute code gen	2 minute test		6 hours 28
 
-TODO: add to victory. A little toon of triumph? Dum dumdum dummm?
-TODO: do we need more trees? Just filling out the edges on the side
+
+I wanted to add a small victory tune when the player escapes at the very end. I asked
+Chat to come up with 4 different tunes. All very pretty decent - I took my favorite,
+and asked that the music be played heading into the victory screen.
+A very small change: the trees are shown to the very far right, but not the left. I
+added one more tree on the left edge to complete the coverage end-to-end.
+
+
+
 TODO: Add a Mute button. No idea from the game when this is turned on.
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
