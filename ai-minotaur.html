@@ -21,18 +21,25 @@ body {
 canvas {
     border: 2px solid #444;
 }
+
 #statusRow {
     width: 816px;
     position: relative;
     margin-top: 12px;
+    display: flex;
+    align-items: center;
 }
 
 #status {
+    position: absolute;
+    left: 0;
+    right: 0;
     color: white;
     font-size: 18px;
     text-align: center;
     height: 24px;
     line-height: 24px;
+    pointer-events: none;
 }
 
 .ui-button {
@@ -67,9 +74,8 @@ canvas {
 </div>
 <div id="statusRow">
     <div id="status"></div>
-    <button id="resetBtn" class="ui-button" disabled style="display:none;">New Game</button>
-</div>
-
+    <span id="muteBtn" title="Mute" style="cursor:pointer; font-size:24px; user-select:none;">🔊</span>
+    <button id="resetBtn" class="ui-button" disabled style="display:none;">New Game</button></div>
 <script>
 let SIZE;
 let CELL;
@@ -97,6 +103,7 @@ const MINOTAUR_STEP_TIMES = [460, 320, 260, 220, 200];
 
 let levelIndex = 0;
 let victoryFadeStart = 0;
+let isMuted = false;
 
 let minotaurVisible = false;
 let minotaurActive = false;
@@ -418,7 +425,7 @@ function minotaurSpeak(text) {
     utterance.rate = 0.5;    // slightly slower
     utterance.volume = 1.0;
 
-    speechSynthesis.speak(utterance);
+    if (!isMuted) speechSynthesis.speak(utterance);
 }
 
 function hasLineOfSight() {
@@ -615,7 +622,7 @@ function draw3D() {
 
     // Projection size
     const wallHeight = 360 / spriteDistance;
-    const spriteHeight = wallHeight * (8 / 12);
+    const spriteHeight = wallHeight * (10 / 12);
     const spriteWidth =
         spriteHeight *
         (minotaurImg.width / minotaurImg.height);
@@ -903,11 +910,10 @@ function drawDefeatScreen() {
     ctx3.fillStyle = `rgb(${sky.r}, ${sky.g}, ${sky.b})`;
     ctx3.fillRect(0, 0, 400, 400);
 
-    // Horns ~100px from top
-    const topMargin = 50;
+    const topMargin = -30;
 
     // Image bottom at bottom of canvas
-    const targetHeight = 550 - topMargin;
+    const targetHeight = 630 - topMargin;
 
     const aspect = minotaurImg.width / minotaurImg.height;
     const targetWidth = targetHeight * aspect;
@@ -972,7 +978,7 @@ document.addEventListener("keydown", e => {
                     statusEl.textContent = "You Win!";
                     victoryFadeStart = performance.now();
                     gameState = STATE_VICTORY;
-                    playVictoryTune();
+                    if (!isMuted) playVictoryTune();
                 }
                 resetBtn.disabled=false;
     	        resetBtn.style.display = "block";
@@ -987,6 +993,11 @@ resetBtn.addEventListener("click", () => {
     } else {
         advanceLevel();
     }
+});
+
+document.getElementById('muteBtn').addEventListener('click', () => {
+    isMuted = !isMuted;
+    document.getElementById('muteBtn').textContent = isMuted ? '🔇' : '🔊';
 });
 
 speechSynthesis.onvoiceschanged = function() {

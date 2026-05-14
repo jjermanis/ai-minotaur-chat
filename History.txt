@@ -318,7 +318,6 @@ one second after exiting the last level. Chat provided the guide: quick and easy
 
 Version 01.11	9 minutes	0 minute code gen	2 minute test		6 hours 28
 
-
 I wanted to add a small victory tune when the player escapes at the very end. I asked
 Chat to come up with 4 different tunes. All very pretty decent - I took my favorite,
 and asked that the music be played heading into the victory screen.
@@ -326,8 +325,18 @@ A very small change: the trees are shown to the very far right, but not the left
 added one more tree on the left edge to complete the coverage end-to-end.
 
 
+Version 01.12	18 minutes	1 minute code gen	3 minute test		6 hours 50
 
-TODO: Add a Mute button. No idea from the game when this is turned on.
+As a standard game feature, I wanted to add a Mute button. When the button has been clicked,
+no audio of what the Minotaur says, or victory music. I asked Chat for this. It had three 
+follow-up questions, all easy to answer. It created the code. It did not quite work: it was 
+close, but the new Mute button was vertically off. It took a couple iterations to fix.
+Now that the walls were taller (10 feet up to 12), I wanted to grow the Minotaur to add 
+to the fear. The Minotaur went from 8 to 10 feet. The height needed to be updated in two
+places: the main game, and where the Minotaur catches the player. This was an easy change.
+
+
+
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
 Chat: "Display level number. Top center above maze, or inside status"
