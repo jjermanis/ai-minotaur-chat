@@ -336,6 +336,12 @@ to the fear. The Minotaur went from 8 to 10 feet. The height needed to be update
 places: the main game, and where the Minotaur catches the player. This was an easy change.
 
 
+Version 01.14	5 minutes	1 minute code gen	1 minute test		6 hours 57
+
+Added the standard MIT License to the page.
+Added Minotaur icon to the browser tab.
+
+
 
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
