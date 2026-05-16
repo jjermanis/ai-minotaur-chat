@@ -342,6 +342,12 @@ Added the standard MIT License to the page.
 Added Minotaur icon to the browser tab.
 
 
+Version 01.15	4 minutes	0 minute code gen	1 minute test		7 hours 2
+
+An unexpected defect. The terms used for the button in the lower-right changed. Went back to 
+"Next Level" when the level is passed, and "New Game" after completing the final level.
+
+
 
 TODO: Do we need an easy TEST mode. Instead of comments here and there, just triggered with one variable
 Chat: create game states to an easier flow of logic. States: playing, won, lost, paused
